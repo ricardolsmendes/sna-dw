@@ -74,6 +74,10 @@ docs/_build/
 # PyBuilder
 target/
 
+# PyCharm
+.DS_Store
+.idea
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
@@ -127,3 +131,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Application data
+data/

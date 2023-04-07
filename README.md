@@ -1,2 +1,3 @@
 # sna-dw
-Social Network Analysis applied to Data Warehouses
+
+Social Network Analysis applied to Data Warehouses.
