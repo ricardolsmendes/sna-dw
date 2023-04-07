@@ -13,7 +13,7 @@ data_files_path = "/".join(input_file.split("/")[:-2])
 # into the `out` folder.
 output_folder = f"{data_files_path}/out"
 
-spark = sql.SparkSession.builder.appName("Dedup lineage edges").getOrCreate()
+spark = sql.SparkSession.builder.appName("Dedup network edges").getOrCreate()
 
 df = spark.read.csv(input_file, header=True)
 
