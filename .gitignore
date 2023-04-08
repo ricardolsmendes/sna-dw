@@ -134,3 +134,7 @@ dmypy.json
 
 # Application data
 data/
+
+# Spark
+/hsperfdata_185
+java_opts.txt
