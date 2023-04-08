@@ -1,4 +1,5 @@
 from datetime import datetime
+import pathlib
 import re
 from typing import List
 import sys
@@ -34,19 +35,20 @@ def _delete_date_suffix(entity_id: str) -> str:
 """
 
 # The input CSV file name should be passed as the first argument to spark-submit.
-input_file = sys.argv[1]
-data_files_path = "/".join(input_file.split("/")[:-2])
+input_file = pathlib.Path(sys.argv[1])
+# Get the two-levels-up folder.
+data_files_path = input_file.parents[1]
 # This is an intermediate step of the data preparation pipeline, so the results are
 # persisted into the `staging/no-segments` folder.
-output_folder = f"{data_files_path}/staging/no-segments"
+output_folder = data_files_path.joinpath("staging").joinpath("no-segments")
 
 spark = sql.SparkSession.builder.appName(
     "Normalize BigQuery segmented table names"
 ).getOrCreate()
 
-df = spark.read.csv(input_file, header=True)
+df = spark.read.csv(str(input_file), header=True)
 
 rdd = df.rdd.map(lambda lineage_record: _delete_date_suffixes(lineage_record))
 
 normalized_df = rdd.toDF(df.schema.names)
-normalized_df.write.mode("overwrite").parquet(output_folder)
+normalized_df.write.mode("overwrite").parquet(str(output_folder))
