@@ -49,4 +49,4 @@ df = spark.read.csv(input_file, header=True)
 rdd = df.rdd.map(lambda lineage_record: _delete_date_suffixes(lineage_record))
 
 normalized_df = rdd.toDF(df.schema.names)
-normalized_df.write.mode("overwrite").option("header", True).csv(output_folder)
+normalized_df.write.mode("overwrite").parquet(output_folder)

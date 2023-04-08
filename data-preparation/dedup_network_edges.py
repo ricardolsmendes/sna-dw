@@ -15,7 +15,7 @@ output_folder = f"{data_files_path}/out"
 
 spark = sql.SparkSession.builder.appName("Dedup network edges").getOrCreate()
 
-df = spark.read.csv(input_file, header=True)
+df = spark.read.parquet(input_file)
 
 distinct_df = df.distinct()
 distinct_df.write.mode("overwrite").option("header", True).csv(output_folder)
