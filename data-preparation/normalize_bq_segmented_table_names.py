@@ -1,8 +1,8 @@
 from datetime import datetime
 import pathlib
 import re
-from typing import List
 import sys
+from typing import List
 
 from pyspark import sql
 from pyspark.sql import DataFrame
@@ -13,10 +13,10 @@ from pyspark.sql import DataFrame
 """
 
 
-def _delete_date_suffixes(lineage_record: List[str]) -> List[str]:
+def _delete_date_suffixes(network_connection_record: List[str]) -> List[str]:
     return [
-        _delete_date_suffix(lineage_record[0]),
-        _delete_date_suffix(lineage_record[1]),
+        _delete_date_suffix(network_connection_record[0]),
+        _delete_date_suffix(network_connection_record[1]),
     ]
 
 
@@ -60,7 +60,7 @@ spark = sql.SparkSession.builder.appName(
 df = spark.read.csv(str(input_file), header=True)
 _print_data_frame_stats("original", df)
 
-rdd = df.rdd.map(lambda lineage_record: _delete_date_suffixes(lineage_record))
+rdd = df.rdd.map(lambda row: _delete_date_suffixes(row))
 
 normalized_df = rdd.toDF(df.schema.names)
 _print_data_frame_stats("normalized", normalized_df)
