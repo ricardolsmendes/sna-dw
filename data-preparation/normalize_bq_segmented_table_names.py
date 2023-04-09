@@ -5,6 +5,7 @@ from typing import List
 import sys
 
 from pyspark import sql
+from pyspark.sql import DataFrame
 
 
 """
@@ -30,6 +31,16 @@ def _delete_date_suffix(entity_id: str) -> str:
         return entity_id
 
 
+def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None:
+    row = data_frame.count()
+    col = len(data_frame.columns)
+
+    print(
+        f"Dimension (rows, columns) of the {data_frame_name}"
+        f" Data Frame is: {(row, col)}"
+    )
+
+
 """
 ===== Main Spark code ==================================================================
 """
@@ -47,8 +58,10 @@ spark = sql.SparkSession.builder.appName(
 ).getOrCreate()
 
 df = spark.read.csv(str(input_file), header=True)
+_print_data_frame_stats("original", df)
 
 rdd = df.rdd.map(lambda lineage_record: _delete_date_suffixes(lineage_record))
 
 normalized_df = rdd.toDF(df.schema.names)
+_print_data_frame_stats("normalized", normalized_df)
 normalized_df.write.mode("overwrite").parquet(str(output_folder))

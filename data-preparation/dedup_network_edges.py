@@ -2,6 +2,23 @@ import pathlib
 import sys
 
 from pyspark import sql
+from pyspark.sql import DataFrame
+
+
+"""
+====== Helper functions ================================================================
+"""
+
+
+def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None:
+    row = data_frame.count()
+    col = len(data_frame.columns)
+
+    print(
+        f"Dimension (rows, columns) of the {data_frame_name}"
+        f" Data Frame is: {(row, col)}"
+    )
+
 
 """
 ===== Main Spark code ==================================================================
@@ -18,6 +35,8 @@ output_folder = data_files_path.joinpath("out")
 spark = sql.SparkSession.builder.appName("Dedup network edges").getOrCreate()
 
 df = spark.read.parquet(str(input_file))
+_print_data_frame_stats("original", df)
 
-distinct_df = df.distinct()
-distinct_df.write.mode("overwrite").option("header", True).csv(str(output_folder))
+deduplicated_df = df.distinct()
+_print_data_frame_stats("deduplicated", deduplicated_df)
+deduplicated_df.write.mode("overwrite").option("header", True).csv(str(output_folder))
