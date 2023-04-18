@@ -15,8 +15,8 @@ from pyspark.sql import DataFrame
 
 def _delete_date_suffixes(network_connection_record: List[str]) -> List[str]:
     return [
-        _delete_date_suffix(network_connection_record[0]),
-        _delete_date_suffix(network_connection_record[1]),
+        _delete_date_suffix(network_connection_record[0]),  # from_entity_id
+        _delete_date_suffix(network_connection_record[1]),  # to_entity_id
     ]
 
 
