@@ -32,12 +32,12 @@ def _delete_date_suffix(entity_id: str) -> str:
 
 
 def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None:
-    row = data_frame.count()
-    col = len(data_frame.columns)
+    row_count = data_frame.count()
+    col_count = len(data_frame.columns)
 
     print(
         f"Dimension (rows, columns) of the {data_frame_name}"
-        f" Data Frame is: {(row, col)}"
+        f" Data Frame is: {(row_count, col_count)}"
     )
 
 
