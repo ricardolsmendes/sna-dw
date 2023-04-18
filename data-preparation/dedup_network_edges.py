@@ -24,19 +24,33 @@ def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None
 ===== Main Spark code ==================================================================
 """
 
-# The input CSV file name should be passed as the first argument to spark-submit.
-input_file = pathlib.Path(sys.argv[1])
-# Get the two-levels-up folder.
-data_files_path = input_file.parents[1]
-# This is the last step of the data preparation pipeline, so the results are persisted
-# into the `out` folder.
-output_folder = data_files_path.joinpath("out")
+# The input Parquet file or folder should be passed as the first argument to
+# spark-submit.
+path_arg = pathlib.Path(sys.argv[1])
+# Determine whether the script runs as an intermediate step of a pipeline or not.
+is_intermediate_step = len(sys.argv) == 3 and sys.argv[2] == "--intermediate-step"
+# Get the grandparent folder of the resource represented by `path_arg`.
+data_files_path = path_arg.parents[2] if path_arg.is_file() else path_arg.parents[1]
+# The results are persisted  into the `staging/no-duplicates` folder if the script runs
+# as an intermediate step of the data preparation pipeline. Otherwise, the results are
+# persisted into the `out` folder.
+output_folder = (
+    data_files_path.joinpath("staging").joinpath("no-duplicates")
+    if is_intermediate_step
+    else data_files_path.joinpath("out")
+)
 
 spark = sql.SparkSession.builder.appName("Dedup network edges").getOrCreate()
 
-df = spark.read.parquet(str(input_file))
+df = spark.read.parquet(str(path_arg))
 _print_data_frame_stats("original", df)
 
 deduplicated_df = df.distinct()
 _print_data_frame_stats("deduplicated", deduplicated_df)
-deduplicated_df.write.mode("overwrite").option("header", True).csv(str(output_folder))
+
+if is_intermediate_step:
+    deduplicated_df.write.mode("overwrite").parquet(str(output_folder))
+else:
+    deduplicated_df.write.mode("overwrite").option("header", True).csv(
+        str(output_folder)
+    )
