@@ -45,10 +45,10 @@ def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None
 ===== Main Spark code ==================================================================
 """
 
-# The input CSV file name should be passed as the first argument to spark-submit.
-input_file = pathlib.Path(sys.argv[1])
-# Get the two-levels-up folder.
-data_files_path = input_file.parents[1]
+# The input CSV file or folder should be passed as the first argument to spark-submit.
+path_arg = pathlib.Path(sys.argv[1])
+# Get the parent folder of the resource represented by `path_arg`.
+data_files_path = path_arg.parents[1] if path_arg.is_file() else path_arg.parent
 # This is an intermediate step of the data preparation pipeline, so the results are
 # persisted into the `staging/no-segments` folder.
 output_folder = data_files_path.joinpath("staging").joinpath("no-segments")
@@ -57,7 +57,7 @@ spark = sql.SparkSession.builder.appName(
     "Normalize BigQuery segmented table names"
 ).getOrCreate()
 
-df = spark.read.csv(str(input_file), header=True)
+df = spark.read.csv(str(path_arg), header=True)
 _print_data_frame_stats("original", df)
 
 rdd = df.rdd.map(lambda row: _delete_date_suffixes(row))
