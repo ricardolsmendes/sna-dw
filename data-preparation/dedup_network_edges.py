@@ -51,6 +51,6 @@ _print_data_frame_stats("deduplicated", deduplicated_df)
 if is_intermediate_step:
     deduplicated_df.write.mode("overwrite").parquet(str(output_folder))
 else:
-    deduplicated_df.write.mode("overwrite").option("header", True).csv(
+    deduplicated_df.coalesce(1).write.mode("overwrite").option("header", True).csv(
         str(output_folder)
     )
