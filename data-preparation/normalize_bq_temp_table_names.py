@@ -12,16 +12,6 @@ from pyspark.sql import DataFrame
 """
 
 
-def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None:
-    row_count = data_frame.count()
-    col_count = len(data_frame.columns)
-
-    print(
-        f"Dimension (rows, columns) of the {data_frame_name}"
-        f" Data Frame is: {(row_count, col_count)}"
-    )
-
-
 def _normalize_temp_dataset_ids(
     network_connection_record: List[str],
     single_temp_id: str,
@@ -56,6 +46,16 @@ def _normalize_temp_dataset_id(
 
     print(f"Replacing dataset id with '{single_temp_id} in '{entity_id}'...")
     return re.sub(dataset_replacement_regex, f".{single_temp_id}.", entity_id)
+
+
+def _print_data_frame_stats(data_frame_name: str, data_frame: DataFrame) -> None:
+    row_count = data_frame.count()
+    col_count = len(data_frame.columns)
+
+    print(
+        f"Dimension (rows, columns) of the {data_frame_name}"
+        f" Data Frame is: {(row_count, col_count)}"
+    )
 
 
 """
