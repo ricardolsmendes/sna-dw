@@ -27,5 +27,5 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install -r requirements-dev.txt
 
-      - name: Run Black style check on source and test code
-        run: black --check ./scripts ./tests
+      - name: Run Black style check on source code
+        run: black --check ./data-preparation/spark ./social-network-analysis
