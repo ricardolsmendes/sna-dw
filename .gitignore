@@ -75,7 +75,6 @@ docs/_build/
 target/
 
 # PyCharm
-.DS_Store
 .idea
 
 # Jupyter Notebook
@@ -131,6 +130,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# asdf settings
+.tool-versions
+
+# macOS Desktop Services Store settings
+.DS_Store
 
 # Sensitive application data
 data/prepared/
