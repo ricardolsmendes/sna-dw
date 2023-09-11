@@ -14,7 +14,7 @@ metric.
 
 [Zinoviev (2018)][Zin18] also states that a complex network has a non-trivial structure.
 It is not a grid, not a tree, not a ring—but it is not entirely random, either. Complex
-networks emerge in nature and the man-made world as a result if decentralized process
+networks emerge in nature and the man-made world as a result of decentralized process
 with no global control. One of the most common mechanisms is the preferential attachment
 (_[Emergence of Scaling in Random Networks][BA99]_), whereby nodes with more edges get
 even more edges, forming gigantic hubs in the core, surrounded by the poorly connected
